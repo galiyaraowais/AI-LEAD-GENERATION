@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Generation Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Lead Generation Dashboard</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <section class="card">
+            <h2>Add Lead (Web Form)</h2>
+            <form action="/web-submit" method="POST" class="form-grid">
+                <input type="text" name="name" placeholder="Name" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="text" name="phone" placeholder="Phone" required>
+                <input type="text" name="business_type" placeholder="Business Type" required>
+                <button type="submit">Submit Lead</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <h2>Upload Leads (CSV)</h2>
+            <p>CSV columns: <code>name,email,phone,business_type</code></p>
+            <form action="/upload-csv" method="POST" enctype="multipart/form-data" class="inline-form">
+                <input type="file" name="file" accept=".csv" required>
+                <button type="submit">Upload CSV</button>
+            </form>
+        </section>
+
+        <section class="card controls">
+            <h2>Filters & Export</h2>
+            <form method="GET" action="/" class="inline-form">
+                <label for="status">Status:</label>
+                <select name="status" id="status">
+                    <option value="">All</option>
+                    <option value="New" {% if status_filter == 'New' %}selected{% endif %}>New</option>
+                    <option value="Qualified" {% if status_filter == 'Qualified' %}selected{% endif %}>Qualified</option>
+                    <option value="Rejected" {% if status_filter == 'Rejected' %}selected{% endif %}>Rejected</option>
+                </select>
+                <button type="submit">Apply</button>
+            </form>
+            <a href="/leads/export" class="export-link">Export Leads CSV</a>
+        </section>
+
+        <section class="card">
+            <h2>Leads Table</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Business Type</th>
+                        <th>Source</th>
+                        <th>Status</th>
+                        <th>Score</th>
+                        <th>Country</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lead in leads %}
+                    <tr>
+                        <td>{{ lead.id }}</td>
+                        <td>{{ lead.name }}</td>
+                        <td>{{ lead.email }}</td>
+                        <td>{{ lead.phone }}</td>
+                        <td>{{ lead.business_type }}</td>
+                        <td>{{ lead.source }}</td>
+                        <td>{{ lead.status }}</td>
+                        <td>{{ lead.lead_score }}</td>
+                        <td>{{ lead.country }}</td>
+                        <td>{{ lead.created_at }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="10">No leads found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+</body>
+</html>

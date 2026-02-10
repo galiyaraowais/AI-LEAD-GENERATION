@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+data/leads.db
+data/lead_agent.log

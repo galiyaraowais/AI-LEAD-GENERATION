@@ -1,0 +1,5 @@
+name,email,phone,business_type
+Alice Johnson,alice@techstars.io,+14155550100,Software Consulting
+Bob Smith,bob@gmail.com,+447700900123,Retail Store
+Carla Mehta,carla@marketwise.in,+919876543210,Marketing Agency
+Invalid User,invalid-email,123,Unknown
